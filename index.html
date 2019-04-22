@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <title>
+            Graph
+        </title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+        <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <style>
+       .axis path, .axis line {
+    fill: none;
+    stroke: #fff;
+  }
+.axis text {
+  	font-size: 13px;
+  }
+.bar {
+    fill: #8CD3DD;
+  }
+.bar:hover {
+    fill: #F56C4E;
+  }
+svg text.label {
+  fill:white;
+  font: 15px;  
+  font-weight: 400;
+  text-anchor: middle;
+}
+#chartID {
+	min-width: 531px;
+}
+        </style>
+    </head>
+    <body>
+            <div id ="chartID"></div>
+            <script>
+
+                var city=[];
+                var final_cities=[]; 
+            $.getJSON('http://localhost:3000/cities', function(data) {
+                for (var i = 0, len = data.length; i < len; i++) {
+        //console.log(data[i]);
+        city.push(data[i]);
+    }
+    counter = {};
+    
+    for (var j = 0; j < city.length; j++){
+        delete city[j].id;
+}
+city.forEach(function(obj) {
+    var key = JSON.stringify(obj.name)
+    counter[key] = (counter[key] || 0) + 1
+    final_cities.push({
+        count :counter[key],
+        name: obj.name
+    }); 
+    
+});
+for (var j = 0; j < final_cities.length; j++){
+    for (var i = j+1; i <final_cities.length; i++){
+        if(final_cities[j].name == final_cities[i].name){
+            final_cities[j].count = final_cities[i].count;
+            delete final_cities[i].count;
+            delete final_cities[i].name;
+           final_cities.splice(i,i);
+        }
+}
+} 
+
+var cities_data = JSON.stringify(final_cities);
+console.log(cities_data);
+var margin = {top:10, right:10, bottom:90, left:10};
+
+var width = 960 - margin.left - margin.right;
+
+var height = 500 - margin.top - margin.bottom;
+
+var xScale = d3.scale.ordinal().rangeRoundBands([0, width], .03)
+
+var yScale = d3.scale.linear()
+      .range([height, 0]);
+
+
+var xAxis = d3.svg.axis()
+		.scale(xScale)
+		.orient("bottom");
+      
+      
+var yAxis = d3.svg.axis()
+		.scale(yScale)
+		.orient("left");
+
+var svgContainer = d3.select("#chartID").append("svg")
+		.attr("width", width+margin.left + margin.right)
+		.attr("height",height+margin.top + margin.bottom)
+		.append("g").attr("class", "container")
+		.attr("transform", "translate("+ margin.left +","+ margin.top +")");
+
+xScale.domain(final_cities.map(function(d) { return d.name; }));
+yScale.domain([0, d3.max(final_cities, function(d) { return d.count; })]);
+
+
+var xAxis_g = svgContainer.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + (height) + ")")
+		.call(xAxis)
+		.selectAll("text");
+
+	svgContainer.selectAll(".bar")
+  		.data(final_cities)
+  		.enter()
+  		.append("rect")
+  		.attr("class", "bar")
+  		.attr("x", function(d) { return xScale(d.name); })
+  		.attr("width", xScale.rangeBand())
+  		.attr("y", function(d) { return yScale(d.count); })
+  		.attr("height", function(d) { return height - yScale(d.count); });
+
+          svgContainer.selectAll(".text")  		
+	  .data(final_cities)
+	  .enter()
+	  .append("text")
+	  .attr("class","label")
+	  .attr("x", (function(d) { return xScale(d.name) + xScale.rangeBand() / 2 ; }  ))
+	  .attr("y", function(d) { return yScale(d.count) + 1; })
+	  .attr("dy", ".75em")
+	  .text(function(d) { return d.count; }); 
+});
+
+
+            </script>
+    </body>
+</html>
