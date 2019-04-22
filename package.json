@@ -1,0 +1,17 @@
+{
+  "name": "twitter-example",
+  "version": "1.0.0",
+  "description": "This is my first twitter example",
+  "main": "index.html",
+  "scripts": {
+    "start": "index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "multer": "^1.4.1",
+    "node-fetch": "^2.3.0",
+    "twit": "^2.2.5"
+  }
+}
