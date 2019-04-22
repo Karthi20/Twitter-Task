@@ -1,0 +1,30 @@
+{
+    "cities": [ {
+        "id": "1", "name": "Mumbai", "state": "Maharashtra"
+    }
+    ,
+    {
+        "id": "2", "name": "Delhi", "state": "Delhi"
+    }
+    ,
+    {
+        "id": "3", "name": "Bengaluru", "state": "Karnataka"
+    }
+    ,
+    {
+        "id": "4", "name": "Ahmedabad", "state": "Gujarat"
+    }
+    ,
+    {
+        "id": "5", "name": "Ahmedabad", "state": "Gujarat"
+    }
+	
+	],
+    "comments": [ {
+        "id": 1, "body": "some comment", "postId": 1
+    }
+    ],
+    "profile": {
+        "name": "typicode"
+    }
+}
